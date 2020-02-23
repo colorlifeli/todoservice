@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.me.todoservice.dao.TodoMapper">
+
+	<select id="getById" resultType="org.me.todoservice.schema.Todo">
+		select * from todo where id=#{id}
+	</select>
+
+	<insert id="add">
+		insert into todo(id,content,type,status,inserttime,operatetime,finishtime)
+		values
+		(NEXT VALUE FOR id_seq, #{content}, #{type}, #{status}, CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0), null)
+	</insert>
+</mapper>

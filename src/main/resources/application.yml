@@ -1,0 +1,30 @@
+server:
+  port: 80
+spring:
+  application:
+    name: "todoservice"
+  datasource:
+    #  驱动
+    driver-class-name: org.h2.Driver
+    # h2 内存数据库 内存模式连接配置 库名: mybatis
+    url: jdbc:h2:file:~/db/todo
+    # 初始化数据表 DDL
+    #schema: classpath:sql/init.sql
+    #  初始化数据 DML
+    #data: classpath:sql/data.sql
+    username: sa
+    password: li123456
+  h2:
+    # 开启console 访问 默认false
+    console:
+      enabled: true
+      settings:
+        # 开启h2 console 跟踪 方便调试  默认 false
+        trace: true
+        # 允许console 远程访问 默认false
+        web-allow-others: true
+      #  h2 访问路径上下文
+      path: /h2
+mybatis:
+  config-location: classpath:/config/mybatis-config.xml
+  mapperLocations: classpath:config/mapper/**/*.xml

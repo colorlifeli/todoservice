@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+  <settings>
+    <setting name="jdbcTypeForNull" value="NULL"/>
+    <setting name="logPrefix" value="mybatis."/>
+  </settings>
+
+  <typeAliases>
+    <!-- 基础类型别名 -->
+    <typeAlias type="java.lang.String" alias="String"/>
+    <typeAlias type="java.lang.Integer" alias="Integer"/>
+    <typeAlias type="java.lang.Long" alias="Long"/>
+    <typeAlias type="java.lang.Short" alias="Short"/>
+    <typeAlias type="java.lang.Double" alias="Double"/>
+    <typeAlias type="java.util.Date" alias="Date"/>
+    <typeAlias type="java.util.Map" alias="Map"/>
+    <typeAlias type="java.util.HashMap" alias="HashMap"/>
+    <typeAlias type="java.util.List" alias="List"/>
+    <typeAlias type="java.util.ArrayList" alias="ArrayList"/>
+    <typeAlias type="java.util.Collection" alias="Collection"/>
+    <typeAlias type="java.util.Iterator" alias="Iterator"/>
+    <typeAlias type="java.math.BigDecimal" alias="BigDecimal"/>
+  </typeAliases>
+
+  <plugins>
+	<plugin interceptor="org.me.todoservice.utils.mybatis.PrintSql">
+	</plugin>
+    <plugin interceptor="org.me.todoservice.utils.mybatis.PagePlugin">
+      <property name="dialect" value="h2"/>
+    </plugin>
+  </plugins>
+
+</configuration>

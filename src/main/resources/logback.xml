@@ -11,9 +11,9 @@
 	</appender>
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>logs/${springAppName}.log</File>
+		<File>logs/todoservice.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logs/${springAppName}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>logs/todoservice.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>100</maxHistory>
 		</rollingPolicy>
 		<encoder>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.me.todoservice.dao.FolderMapper">
+
+	<select id="getByPage" resultType="org.me.todoservice.schema.Folder">
+		select * from folder
+		<where>
+			<if test="folder.id != null and folder.id != ''">
+				id=#{folder.id}
+			</if>
+			<choose>
+				<when test="folder.parentId!= null and folder.parentId!= ''">
+					parentid=#{folder.parentId}
+				</when>
+				<otherwise>
+					parentid is null
+				</otherwise>
+			</choose>
+
+		</where>
+	</select>
+
+	<insert id="add">
+		insert into folder(id,title,parentid,leaf,status,inserttime,operatetime,deletetime)
+		values
+		(NEXT VALUE FOR id_seq, #{f.title}, #{f.parentId}, '1', '0', CURRENT_TIMESTAMP(0),
+		CURRENT_TIMESTAMP(0), null)
+	</insert>
+
+	<select id="getNav" resultType="org.me.todoservice.schema.Folder">
+		WITH AllPath(id, title, parentid, leaf)
+		AS (
+		<!--起始条件-->
+		SELECT id, title, parentid, leaf
+		FROM folder
+		WHERE id = #{id} <!--列出子节点查询条件-->
+		UNION ALL
+		<!--递归条件-->
+		SELECT a.id, a.title, a.parentid, a.leaf
+		FROM folder a
+		INNER JOIN AllPath b ON a.id = b.parentid
+		)
+		SELECT * FROM AllPath
+
+	</select>
+	
+	<update id="update">
+		update folder set title=#{f.title},operatetime=CURRENT_TIMESTAMP(0) where id=#{f.id}
+	</update>
+	
+	<update id="updateNotLeaf">
+		update folder set leaf='0' where id=#{id}
+	</update>
+	
+	<delete id="delete">
+		delete from folder where id=#{id}
+	</delete>
+	
+	
+</mapper>

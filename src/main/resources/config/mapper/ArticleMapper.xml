@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.me.todoservice.dao.ArticleMapper">
+
+	<select id="getById" resultType="org.me.todoservice.schema.Article">
+		select * from article where id=#{id} and status='0'
+	</select>
+
+	<insert id="add">
+		insert into article(id,title,content,path,folderid,status,inserttime,operatetime,deletetime)
+		values
+		(#{a.id}, #{a.title}, #{a.content}, #{a.path}, #{a.folderId}, 
+		'0', CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0), null)
+	</insert>
+	
+	<update id="update">
+		update article set title=#{a.title},content=#{a.content},path=#{a.path},
+			folderid=#{a.folderId},operatetime=CURRENT_TIMESTAMP(0)
+		where id=#{a.id}
+	</update>
+	
+	<delete id="delete">
+	<!-- 
+		delete from article s
+		where id=#{id}
+		 -->
+		update article set status='2' where id=#{id}
+	</delete>
+	
+	<select id="getByPage" resultType="org.me.todoservice.schema.Article">
+		select * from article 
+		order by inserttime desc;
+	</select>
+	
+	<select id="getArticlesByPage" resultType="org.me.todoservice.schema.Article">
+		select * from article 
+		<where>
+			<choose>
+				<when test="folderId != null and folderId != ''">
+					folderid=#{folderId}
+				</when>
+				<otherwise>
+					folderid is null
+				</otherwise>
+			</choose>
+
+		</where>
+		order by inserttime desc
+	</select>
+</mapper>

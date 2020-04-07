@@ -1,4 +1,4 @@
-package org.me.todoservice.controller;
+package org.me.todoservice.api;
 
 import org.me.todoservice.dao.TodoMapper;
 import org.me.todoservice.schema.Todo;
@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "/todo/self")
-public class TodoEnpoint {
-	private static final Logger log = LoggerFactory.getLogger(TodoEnpoint.class);
+public class TodoApi {
+	private static final Logger log = LoggerFactory.getLogger(TodoApi.class);
 
 	@Autowired
 	private TodoMapper todoMapper;

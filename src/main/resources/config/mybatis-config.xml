@@ -29,9 +29,10 @@
   <plugins>
 	<plugin interceptor="org.me.todoservice.utils.mybatis.PrintSql">
 	</plugin>
+	<!-- -->
     <plugin interceptor="org.me.todoservice.utils.mybatis.PagePlugin">
       <property name="dialect" value="h2"/>
-    </plugin>
+    </plugin> 
   </plugins>
 
 </configuration>

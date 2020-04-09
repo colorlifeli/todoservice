@@ -133,14 +133,14 @@ public class ArticleApi {
 	}
 
 	@GetMapping(value = "/many/{pageNum}")
-	public ApiResponse<Article> many(@PathVariable(value = "pageNum") Integer pageNum) {
+	public ApiResponse<List<Article>> many(@PathVariable(value = "pageNum") Integer pageNum) {
 		int pageSize = 10;
 		if (pageNum == null) {
 			pageNum = 1;
 		}
 		Page<Article> page = new Page<>(pageNum, pageSize);
-		articleMapper.getByPage(page);
-		return ApiResponse.ok();
+		List<Article> articles = articleMapper.getByPage(page);
+		return new ApiResponse<List<Article>>(articles);
 	}
 
 	@PostMapping(value = "/edit")

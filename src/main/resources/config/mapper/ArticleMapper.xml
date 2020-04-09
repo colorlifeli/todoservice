@@ -28,8 +28,8 @@
 	</delete>
 	
 	<select id="getByPage" resultType="org.me.todoservice.schema.Article">
-		select * from article 
-		order by inserttime desc;
+		select * from article where status='0'
+		order by operatetime desc
 	</select>
 	
 	<select id="getArticlesByPage" resultType="org.me.todoservice.schema.Article">
@@ -43,8 +43,8 @@
 					folderid is null
 				</otherwise>
 			</choose>
-
+			and status='0'
 		</where>
-		order by inserttime desc
+		order by operatetime desc
 	</select>
 </mapper>

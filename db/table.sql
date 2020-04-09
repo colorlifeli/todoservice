@@ -7,9 +7,9 @@ id int,
 content varchar(1000),
 type varchar(2),
 status varchar(2),
-inserttime date,
-operatetime date,
-finishtime date,
+inserttime timestamp,
+operatetime timestamp,
+finishtime timestamp,
 PRIMARY KEY(id)
 );
 comment on table todo is '待办事项';
@@ -28,9 +28,9 @@ path varchar(100),
 tags varchar(100),
 folderId int,
 status varchar(2),
-inserttime date,
-operatetime date,
-deletetime date,
+inserttime timestamp,
+operatetime timestamp,
+deletetime timestamp,
 PRIMARY KEY(id)
 );
 comment on table article is '笔记';
@@ -51,9 +51,9 @@ title varchar(100),
 parentId int,
 leaf varchar(2),
 status varchar(2),
-inserttime date,
-operatetime date,
-deletetime date,
+inserttime timestamp,
+operatetime timestamp,
+deletetime timestamp,
 PRIMARY KEY(id)
 );
 comment on table folder is '文件夹';
@@ -70,8 +70,8 @@ create table timeline (
 id int,
 content varchar(10000),
 status varchar(2),
-inserttime date,
-operatetime date,
+inserttime timestamp,
+operatetime timestamp,
 PRIMARY KEY(id)
 );
 comment on table timeline is '时间线，日记';

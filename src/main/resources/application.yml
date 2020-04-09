@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: "todoservice"
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd/HH:mm:ss
   datasource:
     #  驱动
     driver-class-name: org.h2.Driver

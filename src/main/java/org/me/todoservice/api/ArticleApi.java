@@ -14,12 +14,7 @@ import org.me.todoservice.utils.mybatis.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/article")
@@ -157,5 +152,32 @@ public class ArticleApi {
 			a.setFolders(folders);
 		}
 		return new ApiResponse<Article>(a);
+	}
+
+	@GetMapping(value = "/search")
+	public ApiResponse<List<Article>> search(@RequestParam String keywords,@RequestParam(required = false) String status) {
+
+		if(ToolUtil.isEmpty(status))
+			status = "0";
+		Page<Article> page = new Page<>(1, 20);
+		page.setNotCount(true);
+		List<Article> articles = articleMapper.searchByPage(page, keywords, status);
+		return new ApiResponse<List<Article>>(articles);
+	}
+
+
+	@GetMapping(value = "/rubbish")
+	public ApiResponse<List<Article>> rubbish() {
+		Page<Article> page = new Page<>(1, Integer.MAX_VALUE);
+		page.setNotCount(true);
+		List<Article> articles = articleMapper.getDeleteByPage(page);
+		return new ApiResponse<List<Article>>(articles);
+	}
+
+
+	@GetMapping(value = "/recover/{id}")
+	public ApiResponse<Article> recover(@PathVariable(value = "id") int id) {
+		articleMapper.recover(id);
+		return ApiResponse.ok();
 	}
 }

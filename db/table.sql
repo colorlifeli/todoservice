@@ -59,7 +59,7 @@ PRIMARY KEY(id)
 comment on table folder is '文件夹';
 comment on column folder.id is '主键';
 comment on column folder.title is '标题';
-comment on column article.parentId is '父文件夹id';
+comment on column folder.parentId is '父文件夹id';
 comment on column folder.inserttime is '创建时间';
 comment on column folder.operatetime is '更新时间';
 comment on column folder.deletetime is '删除时间';
@@ -79,5 +79,4 @@ comment on column timeline.id is '主键';
 comment on column timeline.content is '内容';
 comment on column timeline.inserttime is '创建时间';
 comment on column timeline.operatetime is '更新时间';
-comment on column folder.deletetime is '删除时间';
 comment on column timeline.status is '状态，未使用';

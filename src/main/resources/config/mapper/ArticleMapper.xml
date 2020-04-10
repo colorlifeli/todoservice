@@ -24,7 +24,7 @@
 		delete from article s
 		where id=#{id}
 		 -->
-		update article set status='2' where id=#{id}
+		update article set status='2',deletetime=CURRENT_TIMESTAMP(0) where id=#{id}
 	</delete>
 	
 	<select id="getByPage" resultType="org.me.todoservice.schema.Article">
@@ -47,4 +47,23 @@
 		</where>
 		order by operatetime desc
 	</select>
+
+	<select id="searchByPage" resultType="org.me.todoservice.schema.Article">
+		select * from article where
+		 ( title like concat('%',#{keyword},'%') or content like concat('%',#{keyword},'%') )
+		<if test="status != null and status != ''">
+			and status=#{status}
+		</if>
+		order by operatetime desc
+	</select>
+
+
+	<select id="getDeleteByPage" resultType="org.me.todoservice.schema.Article">
+		select * from article where status='2'
+		order by operatetime desc
+	</select>
+
+	<update id="recover">
+		update article set status='0' where id=#{id}
+	</update>
 </mapper>

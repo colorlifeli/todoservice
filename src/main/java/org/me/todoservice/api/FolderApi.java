@@ -77,13 +77,30 @@ public class FolderApi {
 		if (pageNum == null) {
 			pageNum = 1;
 		}
-
 		Page page = new Page<>(pageNum, pageSize);
-		List<Article> articles = articleMapper.getArticlesByPage(page, folderId);
+		// page.setNotCount(true);
+		List<Article> articles = new ArrayList<Article>();
+
+		// 先查文件夹，如果文件夹超过 pagesize，则只取pagesize条，且不再查articles了。
 		Folder folder = new Folder();
 		folder.setParentId(folderId);
 		List<Folder> folders = folderMapper.getByPage(page, folder);
+		Long folderNum = page.getTotalCount();
 
+		// folder数量少于pagesize，继续查article
+		if (folders.size() < pageSize) {
+			page.setStart(page.getStart() - folderNum);
+			if (folders.size() != 0)
+				page.setPageSize(pageSize - folders.size());
+			articles = articleMapper.getArticlesByPage(page, folderId);
+		} else {
+			page.setPageSize(1);
+			// 为了获取 total
+			articleMapper.getArticlesByPage(page, folderId);
+		}
+		Long articleNum = page.getTotalCount();
+
+		// 导航列表
 		List<Folder> nav = folderMapper.getNav(folderId);
 		Folder home = new Folder();
 		home.setTitle("Home");
@@ -94,7 +111,7 @@ public class FolderApi {
 		result.setArticles(articles);
 		result.setFolders(folders);
 		result.setNav(nav);
-		result.setTotal(articles.size() + folders.size());
+		result.setTotal((int) (folderNum + articleNum));
 		return new ApiResponse<>(result);
 	}
 

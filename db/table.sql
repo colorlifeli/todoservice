@@ -17,7 +17,7 @@ comment on column todo.content is '待办内容';
 comment on column todo.type is '类型';
 comment on column todo.status is '状态';
 comment on column todo.inserttime is '创建时间';
-comment on column todo.operatetime is '操作时间';
+comment on column todo.operatetime is '开始时间';
 comment on column todo.finishtime is '完成时间';
 
 create table article (

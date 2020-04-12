@@ -1,5 +1,8 @@
 package org.me.todoservice.api;
 
+import java.util.List;
+
+import org.me.todoservice.dao.CommonMapper;
 import org.me.todoservice.dao.TodoMapper;
 import org.me.todoservice.schema.Todo;
 import org.me.todoservice.utils.ApiResponse;
@@ -20,14 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/todo/self")
+@RequestMapping(path = "/todo")
 public class TodoApi {
 	private static final Logger log = LoggerFactory.getLogger(TodoApi.class);
 
 	@Autowired
 	private TodoMapper todoMapper;
+	@Autowired
+	private CommonMapper commonMapper;
 
-	@GetMapping(value = "/todo/{id}")
+	@GetMapping(value = "/listTodo")
+	public ApiResponse<List<Todo>> listTodo() {
+		List<Todo> todos = todoMapper.listTodo();
+		return new ApiResponse<List<Todo>>(todos);
+	}
+
+	@GetMapping(value = "get/{id}")
 	public ApiResponse<Todo> getTodo(@PathVariable(value = "id", required = true) int id) {
 		Todo todo = todoMapper.getById(id);
 		return new ApiResponse<Todo>(todo);
@@ -35,9 +46,12 @@ public class TodoApi {
 
 	@PostMapping(value = "/add")
 	public ApiResponse<Todo> add(@RequestBody Todo todo) {
+
+		Integer id = commonMapper.genId();
+		todo.setId(id);
 		int i = todoMapper.add(todo);
 		if (i == 1)
-			return ApiResponse.ok();
+			return new ApiResponse<Todo>(todo);
 
 		return ApiResponse.fail();
 	}

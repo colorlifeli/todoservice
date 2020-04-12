@@ -5,10 +5,15 @@
 	<select id="getById" resultType="org.me.todoservice.schema.Todo">
 		select * from todo where id=#{id}
 	</select>
+	
+	<select id="listTodo" resultType="org.me.todoservice.schema.Todo">
+		select * from todo where status='0' and (operatetime is null or operatetime &lt; CURRENT_TIMESTAMP(0))
+		order by inserttime 
+	</select>
 
 	<insert id="add">
 		insert into todo(id,content,type,status,inserttime,operatetime,finishtime)
 		values
-		(NEXT VALUE FOR id_seq, #{content}, #{type}, #{status}, CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0), null)
+		(#{todo.id}, #{todo.content}, '0', '0', CURRENT_TIMESTAMP(0), null, null)
 	</insert>
 </mapper>

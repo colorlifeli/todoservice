@@ -7,18 +7,22 @@ id int,
 content varchar(1000),
 type varchar(2),
 status varchar(2),
+priority int,
 inserttime timestamp,
 operatetime timestamp,
 finishtime timestamp,
+starttime timestamp,
 PRIMARY KEY(id)
 );
 comment on table todo is '待办事项';
 comment on column todo.content is '待办内容';
 comment on column todo.type is '类型';
 comment on column todo.status is '状态';
+comment on column todo.priority is '优先级。1：重要 2：一般 3：次要';
 comment on column todo.inserttime is '创建时间';
-comment on column todo.operatetime is '开始时间';
+comment on column todo.operatetime is '更新时间';
 comment on column todo.finishtime is '完成时间';
+comment on column todo.starttime is '开妈时间';
 
 create table article (
 id int,

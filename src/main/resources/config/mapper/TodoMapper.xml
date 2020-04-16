@@ -7,13 +7,66 @@
 	</select>
 	
 	<select id="listTodo" resultType="org.me.todoservice.schema.Todo">
-		select * from todo where status='0' and (operatetime is null or operatetime &lt; CURRENT_TIMESTAMP(0))
-		order by inserttime 
+		select * from todo where status='0' and (starttime is null or starttime &lt; CURRENT_TIMESTAMP(0))
+		<if test="type != null and type != ''">
+				and type=#{type}
+		</if>
+		order by priority,inserttime
+	</select>
+
+	<select id="listTodoAll" resultType="org.me.todoservice.schema.Todo">
+		select * from todo where status='0'
+		<if test="type != null and type != ''">
+			and type=#{type}
+		</if>
+		order by priority,inserttime
 	</select>
 
 	<insert id="add">
-		insert into todo(id,content,type,status,inserttime,operatetime,finishtime)
+		insert into todo(id,content,type,status,priority,inserttime,operatetime,finishtime,starttime)
 		values
-		(#{todo.id}, #{todo.content}, '0', '0', CURRENT_TIMESTAMP(0), null, null)
+		(#{todo.id}, #{todo.content}, #{todo.type}, '0', #{todo.priority}, CURRENT_TIMESTAMP(0), null, null,null)
 	</insert>
+
+	<update id="update">
+		update todo set content=#{todo.content},starttime=#{todo.starttime},
+						priority=#{todo.priority},operatetime=CURRENT_TIMESTAMP(0)
+		where id=#{todo.id}
+	</update>
+
+	<delete id="delete">
+		delete todo where id=#{id}
+	</delete>
+
+	<update id="toDone">
+		update todo set status='1',finishtime=CURRENT_TIMESTAMP(0)
+		where id=#{id}
+	</update>
+
+	<update id="backTodo">
+		update todo set status='0',finishtime=null
+		where id=#{id}
+	</update>
+
+	<select id="listDoneByPage" resultType="org.me.todoservice.schema.Todo">
+		select * from todo where status='1'
+		order by finishtime desc
+	</select>
+
+	<select id="searchByPage" resultType="org.me.todoservice.schema.Todo">
+		select * from todo where status='1'
+		<if test="start != null">
+			and finishtime &gt; #{start}
+		</if>
+		<if test="end != null">
+			and finishtime &lt; #{end}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			and content like concat('%',#{keyword},'%')
+		</if>
+		<if test="type != null and type != ''">
+			and type=#{type}
+		</if>
+		order by finishtime desc
+	</select>
 </mapper>

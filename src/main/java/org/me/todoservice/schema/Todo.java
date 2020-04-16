@@ -10,6 +10,10 @@ public class Todo {
 	private Date inserttime;
 	private Date operatetime;
 	private Date finishtime;
+	private Boolean edit=false;
+	private Date starttime;
+	private int priority;
+
 	public int getId() {
 		return id;
 	}
@@ -54,4 +58,27 @@ public class Todo {
 	}
 
 
+	public Boolean getEdit() {
+		return edit;
+	}
+
+	public void setEdit(Boolean edit) {
+		edit = edit;
+	}
+
+	public Date getStarttime() {
+		return starttime;
+	}
+
+	public void setStarttime(Date starttime) {
+		this.starttime = starttime;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
 }

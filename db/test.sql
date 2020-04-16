@@ -22,3 +22,6 @@ alter table folder alter column deletetime type timestamp;
 
 alter table timeline alter column inserttime type timestamp;
 alter table timeline alter column operatetime type timestamp;
+
+alter table todo add column priority int;
+alter table todo add column starttime timestamp;

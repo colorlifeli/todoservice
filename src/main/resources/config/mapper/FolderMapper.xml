@@ -16,8 +16,8 @@
 					parentid is null
 				</otherwise>
 			</choose>
-
 		</where>
+		order by title
 	</select>
 
 	<insert id="add">

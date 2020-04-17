@@ -107,9 +107,9 @@ public class ArticleApi {
 				if (folder == null)
 					continue;
 				path = path + "/" + folder;
+				a.setFolderId(a.getFolders().get(a.getFolders().size() - 1));
 			}
 			a.setPath(path);
-			a.setFolderId(a.getFolders().get(a.getFolders().size() - 1));
 		}
 		if (ToolUtil.isEmpty(a.getId())) {
 			Integer id = commonMapper.genId();

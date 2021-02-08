@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.me.todoservice.dao.ConfigMapper">
+
+    <select id="getAll" resultType="java.util.HashMap">
+        select * from config ;
+    </select>
+
+    <update id="save">
+        update config set  value=#{value},operatetime=CURRENT_TIMESTAMP(0)
+        where code=#{code}
+    </update>
+
+</mapper>

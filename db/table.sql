@@ -84,3 +84,19 @@ comment on column timeline.content is '内容';
 comment on column timeline.inserttime is '创建时间';
 comment on column timeline.operatetime is '更新时间';
 comment on column timeline.status is '状态，未使用';
+
+create table config (
+code varchar(30),
+name varchar(30),
+value varchar(50),
+operatetime timestamp,
+PRIMARY KEY(code)
+);
+comment on table config is '系统配置表';
+comment on column config.code is '主键,配置代码';
+comment on column config.name is '配置描述';
+comment on column config.value is '配置值';
+comment on column config.operatetime is '更新时间';
+
+insert into config(code,name,value,operatetime)
+values('pagesize','文章每页大小','10', CURRENT_TIMESTAMP(0));

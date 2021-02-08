@@ -11,6 +11,7 @@ public class SubFilesVo {
 	private List<Folder> folders;
 	private List<Folder> nav;
 	private Integer total;
+	private Integer pageSize;
 
 	public List<Folder> getFolders() {
 		return folders;
@@ -42,6 +43,14 @@ public class SubFilesVo {
 
 	public void setTotal(Integer total) {
 		this.total = total;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }

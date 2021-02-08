@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.me.todoservice.dao.ConfigMapper;
 import org.me.todoservice.schema.Article;
 import org.me.todoservice.schema.Config;
+import org.me.todoservice.service.ConfigService;
 import org.me.todoservice.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,25 +25,13 @@ public class ConfigApi {
     @Autowired
     private ConfigMapper configMapper;
 
+    @Autowired
+    private ConfigService configService;
+
     @GetMapping(value = "/get")
     public ApiResponse<Config> get() {
-        List<Map<String, Object>> configs = configMapper.getAll();
-        Map<String, String> map = new HashMap<>();
-        for (Map<String, Object> config : configs) {
-            String key = null, value = null;
-            for (Map.Entry<String, Object> entry : config.entrySet()) {
-                if ("code".equals(entry.getKey()))
-                    key = String.valueOf(entry.getValue());
-                if ("value".equals(entry.getKey()))
-                    value = String.valueOf(entry.getValue());
-                map.put(key, value);
-            }
-        }
 
-        Config c = new Config();
-        c.setPageSize(Integer.parseInt(map.get("pagesize")));
-
-        return new ApiResponse<Config>(c);
+        return new ApiResponse<Config>(configService.getConfig());
     }
 
     @PostMapping(value = "/save")

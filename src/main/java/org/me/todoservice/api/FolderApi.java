@@ -10,6 +10,7 @@ import org.me.todoservice.dao.FolderMapper;
 import org.me.todoservice.schema.Article;
 import org.me.todoservice.schema.Folder;
 import org.me.todoservice.schema.vo.SubFilesVo;
+import org.me.todoservice.service.ConfigService;
 import org.me.todoservice.utils.ApiResponse;
 import org.me.todoservice.utils.MyException;
 import org.me.todoservice.utils.mybatis.Page;
@@ -30,6 +31,8 @@ public class FolderApi {
 	private FolderMapper folderMapper;
 	@Autowired
 	private ArticleMapper articleMapper;
+    @Autowired
+    private ConfigService configService;
 
 	@GetMapping(value = "/subFolder")
 	public ApiResponse<List> get(@RequestParam(required = false) String parentid) {
@@ -73,7 +76,7 @@ public class FolderApi {
 	public ApiResponse<SubFilesVo> subFiles(@PathVariable(value = "pageNum") Integer pageNum,
 			@RequestParam(required = false) String folderId) {
 
-		int pageSize = 10;
+		int pageSize = configService.getConfig().getPageSize();
 		if (pageNum == null) {
 			pageNum = 1;
 		}
@@ -112,6 +115,7 @@ public class FolderApi {
 		result.setFolders(folders);
 		result.setNav(nav);
 		result.setTotal((int) (folderNum + articleNum));
+		result.setPageSize(pageSize);
 		return new ApiResponse<>(result);
 	}
 

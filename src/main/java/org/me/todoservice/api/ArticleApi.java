@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.me.todoservice.dao.ArticleMapper;
 import org.me.todoservice.dao.CommonMapper;
 import org.me.todoservice.schema.Article;
+import org.me.todoservice.service.ConfigService;
 import org.me.todoservice.service.ToolService;
 import org.me.todoservice.utils.ApiResponse;
 import org.me.todoservice.utils.ToolUtil;
@@ -14,7 +15,13 @@ import org.me.todoservice.utils.mybatis.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/article")
@@ -27,6 +34,9 @@ public class ArticleApi {
 	private ToolService toolService;
 	@Autowired
 	private CommonMapper commonMapper;
+    @Autowired
+    private ConfigService configService;
+
 
 	private final static String cacheKey = "article:temp";
 
@@ -134,7 +144,7 @@ public class ArticleApi {
 			pageNum = 1;
 		}
 		if (pageSize == null) 
-			pageSize = 10;
+			pageSize = configService.getConfig().getPageSize();;
 		Page<Article> page = new Page<>(pageNum, pageSize);
 		List<Article> articles = articleMapper.getByPage(page);
 		page.getResult().addAll(articles);

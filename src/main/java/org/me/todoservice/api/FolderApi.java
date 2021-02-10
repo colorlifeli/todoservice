@@ -11,6 +11,7 @@ import org.me.todoservice.schema.Article;
 import org.me.todoservice.schema.Folder;
 import org.me.todoservice.schema.vo.SubFilesVo;
 import org.me.todoservice.service.ConfigService;
+import org.me.todoservice.service.FolderSevice;
 import org.me.todoservice.utils.ApiResponse;
 import org.me.todoservice.utils.MyException;
 import org.me.todoservice.utils.mybatis.Page;
@@ -33,6 +34,8 @@ public class FolderApi {
 	private ArticleMapper articleMapper;
     @Autowired
     private ConfigService configService;
+	@Autowired
+	private FolderSevice folderSevice;
 
 	@GetMapping(value = "/subFolder")
 	public ApiResponse<List> get(@RequestParam(required = false) String parentid) {
@@ -60,7 +63,6 @@ public class FolderApi {
 	/**
 	 * 返回根目录
 	 * 
-	 * @param parentid
 	 * @return
 	 */
 	@GetMapping(value = "/current")
@@ -134,13 +136,13 @@ public class FolderApi {
 	}
 
 	@GetMapping(value = "/delete")
-	public ApiResponse<Folder> delete(@RequestParam String folderId) {
+	public ApiResponse<Folder> delete(@RequestParam String folderId)  {
 		Page page = new Page<>(1, Integer.MAX_VALUE);
-		List<Article> articles = articleMapper.getArticlesByPage(page, folderId);
+		List<Article> articles = articleMapper.getAllArticlesByPage(page, folderId);
 		if (articles != null && articles.size() > 0) {
 			throw new MyException("该目录下有文章，不能删除！");
 		}
-		folderMapper.delete(folderId);
+		folderSevice.delete(folderId);
 		return ApiResponse.ok();
 	}
 

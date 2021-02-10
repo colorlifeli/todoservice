@@ -28,6 +28,14 @@ public interface ArticleMapper {
 	 */
 	List<Article> getArticlesByPage(@Param("page") Page page, @Param("folderId") String folderId);
 
+	/**
+	 * 查询指定目录下的文章,递归包含子目录
+	 *
+	 * @param page
+	 * @return
+	 */
+	List<Article> getAllArticlesByPage(@Param("page") Page page, @Param("folderId") String folderId);
+
 
 	List<Article> searchByPage(@Param("page") Page page, @Param("keyword") String keyword, @Param("status") String status);
 

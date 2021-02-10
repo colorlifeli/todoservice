@@ -48,6 +48,15 @@
 		order by operatetime desc
 	</select>
 
+
+	<select id="getAllArticlesByPage" resultType="org.me.todoservice.schema.Article">
+		select * from article
+		<where>
+			path like concat('%', #{folderId}, '%') and status='0'
+		</where>
+		order by operatetime desc
+	</select>
+
 	<select id="searchByPage" resultType="org.me.todoservice.schema.Article">
 		select * from article where
 		 ( title like concat('%',#{keyword},'%') or content like concat('%',#{keyword},'%') )

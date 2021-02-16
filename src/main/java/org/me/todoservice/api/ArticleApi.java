@@ -47,18 +47,18 @@ public class ArticleApi {
 			a = new Article();
 			a.setContent("");
 		}
-		return new ApiResponse<Article>(a);
+		return new ApiResponse<>(a);
 	}
 
 	@PostMapping(value = "/tempSave")
 	public ApiResponse<Article> tempSave(@RequestBody Article a) {
 
 		if (a.getFolders() != null) {
-			String path = "";
+			StringBuilder path = new StringBuilder();
 			for (String folder : a.getFolders()) {
-				path = path + "/" + folder;
+				path.append("/").append(folder);
 			}
-			a.setPath(path);
+			a.setPath(path.toString());
 		}
 		toolService.setCache(cacheKey, a);
 		return ApiResponse.ok();
@@ -75,7 +75,7 @@ public class ArticleApi {
 		Article a = articleMapper.getById(id);
 		if (ToolUtil.isNotEmpty(a.getPath())) {
 			String[] paths = a.getPath().split("/");
-			List<String> folders = new ArrayList<String>();
+			List<String> folders = new ArrayList<>();
 			for (String path : paths) {
 				if (ToolUtil.isNotEmpty(path)) {
 					folders.add(path);
@@ -83,24 +83,24 @@ public class ArticleApi {
 			}
 			a.setFolders(folders);
 		}
-		return new ApiResponse<Article>(a);
+		return new ApiResponse<>(a);
 	}
 
 	@PostMapping(value = "/add")
 	public ApiResponse<Article> add(@RequestBody Article a) {
-		Integer id = commonMapper.genId();
-		a.setId(id.toString());
-		String path = "";
+		int id = commonMapper.genId();
+		a.setId(String.valueOf(id));
+		StringBuilder path = new StringBuilder();
 		a.getFolders().remove(null);
 		List<String> folders = a.getFolders();
 		folders = folders.stream().filter(item -> item != null).collect(Collectors.toList());
 		for (String folder : folders) {
-			path = path + "/" + folder;
+			path.append("/").append(folder);
 		}
 		a.setFolders(folders);
-		a.setPath(path);
+		a.setPath(path.toString());
 		articleMapper.add(a);
-		return new ApiResponse<Article>(a);
+		return new ApiResponse<>(a);
 	}
 
 	@PostMapping(value = "/update")
@@ -111,24 +111,25 @@ public class ArticleApi {
 
 	@PostMapping(value = "/save")
 	public ApiResponse<Article> save(@RequestBody Article a) {
-		if (a.getFolders() != null) {
-			String path = "";
+		if (a.getFolders() != null && a.getFolders().size() > 0) {
+			StringBuilder path = new StringBuilder();
+			//既记录 path，也记录所在的目录id，方便查询目录下所有的文章
+			String lastFolderId = a.getFolders().get(a.getFolders().size() - 1);
+			a.setFolderId(lastFolderId);
 			for (String folder : a.getFolders()) {
 				if (folder == null)
 					continue;
-				path = path + "/" + folder;
-				a.setFolderId(a.getFolders().get(a.getFolders().size() - 1));
+				path.append("/").append(folder);
 			}
-			a.setPath(path);
+			a.setPath(path.toString());
 		}
 		if (ToolUtil.isEmpty(a.getId())) {
-			Integer id = commonMapper.genId();
-			a.setId(id.toString());
-			articleMapper.add(a);
+			int id = commonMapper.genId();
+			a.setId(String.valueOf(id));
 		} else
 			articleMapper.update(a);
 
-		return new ApiResponse<Article>(a);
+		return new ApiResponse<>(a);
 	}
 
 	@GetMapping(value = "/delete/{id}")
@@ -144,11 +145,11 @@ public class ArticleApi {
 			pageNum = 1;
 		}
 		if (pageSize == null) 
-			pageSize = configService.getConfig().getPageSize();;
+			pageSize = configService.getConfig().getPageSize();
 		Page<Article> page = new Page<>(pageNum, pageSize);
 		List<Article> articles = articleMapper.getByPage(page);
 		page.getResult().addAll(articles);
-		return new ApiResponse<Page<Article>>(page);
+		return new ApiResponse<>(page);
 	}
 
 	@PostMapping(value = "/edit")
@@ -156,7 +157,7 @@ public class ArticleApi {
 		Article a = articleMapper.getById(Integer.parseInt(article.getId()));
 		if (ToolUtil.isNotEmpty(a.getPath())) {
 			String[] paths = a.getPath().split("/");
-			List<String> folders = new ArrayList<String>();
+			List<String> folders = new ArrayList<>();
 			for (String path : paths) {
 				if (ToolUtil.isNotEmpty(path)) {
 					folders.add(path);
@@ -164,7 +165,7 @@ public class ArticleApi {
 			}
 			a.setFolders(folders);
 		}
-		return new ApiResponse<Article>(a);
+		return new ApiResponse<>(a);
 	}
 
 	@GetMapping(value = "/search")
@@ -175,7 +176,7 @@ public class ArticleApi {
 		Page<Article> page = new Page<>(1, 20);
 		page.setNotCount(true);
 		List<Article> articles = articleMapper.searchByPage(page, keywords, status);
-		return new ApiResponse<List<Article>>(articles);
+		return new ApiResponse<>(articles);
 	}
 
 
@@ -184,7 +185,7 @@ public class ArticleApi {
 		Page<Article> page = new Page<>(1, Integer.MAX_VALUE);
 		page.setNotCount(true);
 		List<Article> articles = articleMapper.getDeleteByPage(page);
-		return new ApiResponse<List<Article>>(articles);
+		return new ApiResponse<>(articles);
 	}
 
 

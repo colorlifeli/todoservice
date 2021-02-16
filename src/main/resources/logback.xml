@@ -6,7 +6,7 @@
 		<encoder>
 			<!-- <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%file:%line] 
 				- %msg%n</pattern> -->
-			<pattern>%d{HH:mm:ss.SSS} %-5level [%file:%line] - %msg%n</pattern>
+			<pattern>%d{yy-MM-dd HH:mm:ss.SSS} %-5level [%file:%line] - %msg%n</pattern>
 		</encoder>
 	</appender>
 	<appender name="FILE"
@@ -17,7 +17,7 @@
 			<maxHistory>100</maxHistory>
 		</rollingPolicy>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} %-5level [%file:%line] - %msg%n</pattern>
+			<pattern>%d{yy-MM-dd HH:mm:ss.SSS} %-5level [%file:%line] - %msg%n</pattern>
 		</encoder>
 	</appender>
 

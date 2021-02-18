@@ -18,7 +18,7 @@ public interface FolderMapper {
 	 * @param id
 	 * @return
 	 */
-	List<Folder> getNav(@Param("id") String id);
+	List<Folder> getNav(@Param("id") String id, @Param("userCode") String userCode);
 
 	int add(@Param("f") Folder folder);
 
@@ -33,4 +33,6 @@ public interface FolderMapper {
 	 * @return
 	 */
 	int updateNotLeaf(@Param("id") String id);
+
+	Folder get(@Param("id") String id);
 }

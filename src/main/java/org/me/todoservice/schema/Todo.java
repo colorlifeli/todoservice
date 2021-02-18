@@ -13,6 +13,7 @@ public class Todo {
 	private Boolean edit=false;
 	private Date starttime;
 	private int priority;
+	private String usercode;
 
 	public int getId() {
 		return id;
@@ -80,5 +81,13 @@ public class Todo {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public String getUsercode() {
+		return usercode;
+	}
+
+	public void setUsercode(String usercode) {
+		this.usercode = usercode;
 	}
 }

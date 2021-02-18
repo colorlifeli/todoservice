@@ -13,9 +13,9 @@ public interface TodoMapper {
 
     Todo getById(@Param("id") int id);
 
-    List<Todo> listTodo(@Param("type") String type);
+    List<Todo> listTodo(@Param("type") String type, @Param("userCode") String userCode);
 
-    List<Todo> listTodoAll(@Param("type") String type);
+    List<Todo> listTodoAll(@Param("type") String type, @Param("userCode") String userCode);
 
     int add(@Param("todo") Todo todo);
 
@@ -27,9 +27,9 @@ public interface TodoMapper {
 
     int backTodo(@Param("id") int id);
 
-    List<Todo> listDoneByPage(@Param("page") Page page);
+    List<Todo> listDoneByPage(@Param("page") Page page, @Param("userCode") String userCode);
 
     List<Todo> searchByPage(@Param("page") Page page, @Param("start") Date start,
-                            @Param("end") Date end, @Param("keyword") String keyword, @Param("type") String type);
+                            @Param("end") Date end, @Param("keyword") String keyword, @Param("type") String type, @Param("userCode") String userCode);
 
 }

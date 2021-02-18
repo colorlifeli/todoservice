@@ -11,6 +11,7 @@ public class Folder {
 	private Date inserttime;
 	private Date operatetime;
 	private Date deletetime;
+	private String usercode;
 
 	public String getId() {
 		return id;
@@ -76,4 +77,11 @@ public class Folder {
 		this.leaf = leaf;
 	}
 
+	public String getUsercode() {
+		return usercode;
+	}
+
+	public void setUsercode(String usercode) {
+		this.usercode = usercode;
+	}
 }

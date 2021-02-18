@@ -13,7 +13,7 @@ public class WebExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler
-    public ApiResponse handle(Exception e) throws Exception{
+    public ApiResponse handle(Exception e) throws Exception {
         StackTraceElement[] stackTrace = e.getStackTrace();
         String className = "";
         try {
@@ -21,8 +21,9 @@ public class WebExceptionHandler {
         } catch (Exception classe) {
             log.error("无法获取抛出异常的类 " + classe.getMessage());
         }
-        if(e instanceof  MyException) {
-            return new ApiResponse(ApiResponse.FAIL, ((MyException) e).getMsg(), null);
+        if (e instanceof MyException) {
+            int code = Integer.parseInt(((MyException) e).getCode());
+            return new ApiResponse(code, ((MyException) e).getMsg(), null);
         } else {
             log.error("系统抛出运行时异常", e);
             throw e;

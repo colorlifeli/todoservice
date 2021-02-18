@@ -11,6 +11,9 @@
 		<if test="type != null and type != ''">
 				and type=#{type}
 		</if>
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		order by priority,inserttime
 	</select>
 
@@ -19,13 +22,16 @@
 		<if test="type != null and type != ''">
 			and type=#{type}
 		</if>
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		order by priority,inserttime
 	</select>
 
 	<insert id="add">
-		insert into todo(id,content,type,status,priority,inserttime,operatetime,finishtime,starttime)
+		insert into todo(id,content,type,status,priority,inserttime,operatetime,finishtime,starttime,usercode)
 		values
-		(#{todo.id}, #{todo.content}, #{todo.type}, '0', #{todo.priority}, CURRENT_TIMESTAMP(0), null, null,null)
+		(#{todo.id}, #{todo.content}, #{todo.type}, '0', #{todo.priority}, CURRENT_TIMESTAMP(0), null, null,null, #{todo.usercode})
 	</insert>
 
 	<update id="update">
@@ -50,6 +56,9 @@
 
 	<select id="listDoneByPage" resultType="org.me.todoservice.schema.Todo">
 		select * from todo where status='1'
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		order by finishtime desc
 	</select>
 
@@ -66,6 +75,9 @@
 		</if>
 		<if test="type != null and type != ''">
 			and type=#{type}
+		</if>
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
 		</if>
 		order by finishtime desc
 	</select>

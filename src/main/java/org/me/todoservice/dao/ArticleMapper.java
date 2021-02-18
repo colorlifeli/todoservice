@@ -18,7 +18,7 @@ public interface ArticleMapper {
 
 	int delete(@Param("id") int id);
 
-	List<Article> getByPage(@Param("page") Page page);
+	List<Article> getByPage(@Param("page") Page page, @Param("userCode") String userCode);
 
 	/**
 	 * 查询指定目录下的文章
@@ -26,7 +26,7 @@ public interface ArticleMapper {
 	 * @param page
 	 * @return
 	 */
-	List<Article> getArticlesByPage(@Param("page") Page page, @Param("folderId") String folderId);
+	List<Article> getArticlesByPage(@Param("page") Page page, @Param("folderId") String folderId, @Param("userCode") String userCode);
 
 	/**
 	 * 查询指定目录下的文章,递归包含子目录
@@ -34,17 +34,17 @@ public interface ArticleMapper {
 	 * @param page
 	 * @return
 	 */
-	List<Article> getAllArticlesByPage(@Param("page") Page page, @Param("folderId") String folderId);
+	List<Article> getAllArticlesByPage(@Param("page") Page page, @Param("folderId") String folderId, @Param("userCode") String userCode);
 
 
-	List<Article> searchByPage(@Param("page") Page page, @Param("keyword") String keyword, @Param("status") String status);
+	List<Article> searchByPage(@Param("page") Page page, @Param("keyword") String keyword, @Param("status") String status, @Param("userCode") String userCode);
 
 	/**
 	 * 查找逻辑删除了的文章
 	 * @param page
 	 * @return
 	 */
-	List<Article> getDeleteByPage(@Param("page") Page page);
+	List<Article> getDeleteByPage(@Param("page") Page page, @Param("userCode") String userCode);
 
 	/**
 	 * 将文章恢复为未删除

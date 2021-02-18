@@ -3,14 +3,14 @@
 <mapper namespace="org.me.todoservice.dao.ArticleMapper">
 
 	<select id="getById" resultType="org.me.todoservice.schema.Article">
-		select * from article where id=#{id} and status='0'
+		select * from article where id=#{id}
 	</select>
 
 	<insert id="add">
-		insert into article(id,title,content,path,folderid,status,inserttime,operatetime,deletetime)
+		insert into article(id,title,content,path,folderid,status,inserttime,operatetime,deletetime,usercode)
 		values
 		(#{a.id}, #{a.title}, #{a.content}, #{a.path}, #{a.folderId}, 
-		'0', CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0), null)
+		'0', CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0), null, #{a.usercode})
 	</insert>
 	
 	<update id="update">
@@ -29,6 +29,9 @@
 	
 	<select id="getByPage" resultType="org.me.todoservice.schema.Article">
 		select * from article where status='0'
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		order by operatetime desc
 	</select>
 	
@@ -43,6 +46,9 @@
 					folderid is null
 				</otherwise>
 			</choose>
+			<if test="userCode != null and userCode != ''">
+				and usercode=#{userCode}
+			</if>
 			and status='0'
 		</where>
 		order by operatetime desc
@@ -53,6 +59,9 @@
 		select * from article
 		<where>
 			path like concat('%', #{folderId}, '%') and status='0'
+			<if test="userCode != null and userCode != ''">
+				and usercode=#{userCode}
+			</if>
 		</where>
 		order by operatetime desc
 	</select>
@@ -63,12 +72,18 @@
 		<if test="status != null and status != ''">
 			and status=#{status}
 		</if>
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		order by operatetime desc
 	</select>
 
 
 	<select id="getDeleteByPage" resultType="org.me.todoservice.schema.Article">
 		select * from article where status='2'
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		order by operatetime desc
 	</select>
 

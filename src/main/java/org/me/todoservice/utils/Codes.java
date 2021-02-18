@@ -1,20 +1,16 @@
 package org.me.todoservice.utils;
 
-/**
- * @Description:
- * @Date: 2019/6/15 Author: deng.zhirong
- */
 public enum Codes {
 
-	SUCCESS("200"), ERROR("400"), EXCEPTION("500");
+    SUCCESS("200"), ERROR("400"), EXCEPTION("500"), AUTHFAIL("401");
 
-	Codes(String code) {
-		this.code = code;
-	}
+    Codes(String code) {
+        this.code = code;
+    }
 
-	private String code;
+    private String code;
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 }

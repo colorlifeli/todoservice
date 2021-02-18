@@ -6,6 +6,7 @@ import java.util.List;
 import org.me.todoservice.dao.CommonMapper;
 import org.me.todoservice.dao.TodoMapper;
 import org.me.todoservice.schema.Todo;
+import org.me.todoservice.utils.AbstractApi;
 import org.me.todoservice.utils.ApiResponse;
 import org.me.todoservice.utils.mybatis.Page;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(path = "/todo")
-public class TodoApi {
+public class TodoApi extends AbstractApi {
     private static final Logger log = LoggerFactory.getLogger(TodoApi.class);
 
     @Autowired
@@ -31,13 +32,13 @@ public class TodoApi {
 
     @GetMapping(value = "/listTodo")
     public ApiResponse<List<Todo>> listTodo(@RequestParam(required = false) String type) {
-        List<Todo> todos = todoMapper.listTodo(type);
+        List<Todo> todos = todoMapper.listTodo(type, getUserCode());
         return new ApiResponse<List<Todo>>(todos);
     }
 
     @GetMapping(value = "/listTodoAll")
     public ApiResponse<List<Todo>> listTodoAll(@RequestParam(required = false) String type) {
-        List<Todo> todos = todoMapper.listTodoAll(type);
+        List<Todo> todos = todoMapper.listTodoAll(type, getUserCode());
         return new ApiResponse<List<Todo>>(todos);
     }
 
@@ -49,6 +50,7 @@ public class TodoApi {
 
     @PostMapping(value = "/add")
     public ApiResponse<Todo> add(@RequestBody Todo todo) {
+        todo.setUsercode(getUserCode());
         Integer id = commonMapper.genId();
         todo.setId(id);
         int i = todoMapper.add(todo);
@@ -86,7 +88,7 @@ public class TodoApi {
         if (pageSize == null)
             pageSize = 10;
         Page page = new Page(pageNum, pageSize);
-        List<Todo> todos = todoMapper.listDoneByPage(page);
+        List<Todo> todos = todoMapper.listDoneByPage(page, getUserCode());
         page.getResult().addAll(todos);
         return new ApiResponse<Page>(page);
     }
@@ -102,7 +104,7 @@ public class TodoApi {
         if (pageSize == null)
             pageSize = 10;
         Page page = new Page(pageNum, pageSize);
-        List<Todo> todos = todoMapper.searchByPage(page, start, end, keyword, type);
+        List<Todo> todos = todoMapper.searchByPage(page, start, end, keyword, type, getUserCode());
         page.getResult().addAll(todos);
         return new ApiResponse<Page>(page);
     }

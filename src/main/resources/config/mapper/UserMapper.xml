@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.me.todoservice.dao.UserMapper">
+
+    <select id="get" resultType="org.me.todoservice.schema.User">
+        select code,pw as password,role from user where code = #{code}
+    </select>
+
+
+</mapper>

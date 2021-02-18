@@ -16,15 +16,18 @@
 					parentid is null
 				</otherwise>
 			</choose>
+			<if test="folder.usercode != null and folder.usercode != ''">
+				and usercode=#{folder.usercode}
+			</if>
 		</where>
 		order by title
 	</select>
 
 	<insert id="add">
-		insert into folder(id,title,parentid,leaf,status,inserttime,operatetime,deletetime)
+		insert into folder(id,title,parentid,leaf,status,inserttime,operatetime,deletetime,usercode)
 		values
 		(NEXT VALUE FOR id_seq, #{f.title}, #{f.parentId}, '1', '0', CURRENT_TIMESTAMP(0),
-		CURRENT_TIMESTAMP(0), null)
+		CURRENT_TIMESTAMP(0), null, #{f.usercode})
 	</insert>
 
 	<select id="getNav" resultType="org.me.todoservice.schema.Folder">
@@ -34,6 +37,9 @@
 		SELECT id, title, parentid, leaf
 		FROM folder
 		WHERE id = #{id} <!--列出子节点查询条件-->
+		<if test="userCode != null and userCode != ''">
+			and usercode=#{userCode}
+		</if>
 		UNION ALL
 		<!--递归条件-->
 		SELECT a.id, a.title, a.parentid, a.leaf
@@ -55,6 +61,9 @@
 	<delete id="delete">
 		delete from folder where id=#{id}
 	</delete>
-	
+
+	<select id="get" resultType="org.me.todoservice.schema.Folder">
+		select * from folder where id=#{id}
+	</select>
 	
 </mapper>

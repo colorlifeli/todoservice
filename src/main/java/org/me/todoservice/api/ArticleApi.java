@@ -6,10 +6,14 @@ import java.util.stream.Collectors;
 
 import org.me.todoservice.dao.ArticleMapper;
 import org.me.todoservice.dao.CommonMapper;
+import org.me.todoservice.dao.FolderMapper;
 import org.me.todoservice.schema.Article;
+import org.me.todoservice.schema.Folder;
 import org.me.todoservice.service.ConfigService;
 import org.me.todoservice.service.ToolService;
+import org.me.todoservice.utils.AbstractApi;
 import org.me.todoservice.utils.ApiResponse;
+import org.me.todoservice.utils.MyException;
 import org.me.todoservice.utils.ToolUtil;
 import org.me.todoservice.utils.mybatis.Page;
 import org.slf4j.Logger;
@@ -25,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/article")
-public class ArticleApi {
+public class ArticleApi extends AbstractApi {
 	private static final Logger log = LoggerFactory.getLogger(ArticleApi.class);
 
 	@Autowired
@@ -36,6 +40,8 @@ public class ArticleApi {
 	private CommonMapper commonMapper;
     @Autowired
     private ConfigService configService;
+	@Autowired
+	private FolderMapper folderMapper;
 
 
 	private final static String cacheKey = "article:temp";
@@ -52,7 +58,6 @@ public class ArticleApi {
 
 	@PostMapping(value = "/tempSave")
 	public ApiResponse<Article> tempSave(@RequestBody Article a) {
-
 		if (a.getFolders() != null) {
 			StringBuilder path = new StringBuilder();
 			for (String folder : a.getFolders()) {
@@ -99,6 +104,7 @@ public class ArticleApi {
 		}
 		a.setFolders(folders);
 		a.setPath(path.toString());
+		a.setUsercode(getUserCode());
 		articleMapper.add(a);
 		return new ApiResponse<>(a);
 	}
@@ -147,7 +153,7 @@ public class ArticleApi {
 		if (pageSize == null) 
 			pageSize = configService.getConfig().getPageSize();
 		Page<Article> page = new Page<>(pageNum, pageSize);
-		List<Article> articles = articleMapper.getByPage(page);
+		List<Article> articles = articleMapper.getByPage(page, getUserCode());
 		page.getResult().addAll(articles);
 		return new ApiResponse<>(page);
 	}
@@ -175,7 +181,7 @@ public class ArticleApi {
 			status = "0";
 		Page<Article> page = new Page<>(1, 20);
 		page.setNotCount(true);
-		List<Article> articles = articleMapper.searchByPage(page, keywords, status);
+		List<Article> articles = articleMapper.searchByPage(page, keywords, status, getUserCode());
 		return new ApiResponse<>(articles);
 	}
 
@@ -184,13 +190,17 @@ public class ArticleApi {
 	public ApiResponse<List<Article>> rubbish() {
 		Page<Article> page = new Page<>(1, Integer.MAX_VALUE);
 		page.setNotCount(true);
-		List<Article> articles = articleMapper.getDeleteByPage(page);
+		List<Article> articles = articleMapper.getDeleteByPage(page, getUserCode());
 		return new ApiResponse<>(articles);
 	}
 
 
 	@GetMapping(value = "/recover/{id}")
 	public ApiResponse<Article> recover(@PathVariable(value = "id") int id) {
+		Article a = articleMapper.getById(id);
+		Folder f = folderMapper.get(a.getFolderId());
+		if(f == null || f.getId() == null)
+			throw new MyException("所在目录已删除，不能恢复");
 		articleMapper.recover(id);
 		return ApiResponse.ok();
 	}

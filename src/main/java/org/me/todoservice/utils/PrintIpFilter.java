@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @WebFilter(filterName = "printIpFilter", urlPatterns = "/*")
 public class PrintIpFilter implements Filter {
@@ -19,7 +20,7 @@ public class PrintIpFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             String remoteAddr = getIpAddr(httpRequest);
@@ -27,11 +28,11 @@ public class PrintIpFilter implements Filter {
             String operation = httpRequest.getRequestURL().toString();
             log.info("remoteAddr :" + remoteAddr);
             log.info("path: " + operation);
-
-            chain.doFilter(request, response);
         } catch (Exception e) {
             log.error("error!", e);
         }
+
+        chain.doFilter(request, response);
     }
 
     @Override

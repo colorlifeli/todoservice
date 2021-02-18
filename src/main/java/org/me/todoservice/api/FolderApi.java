@@ -12,6 +12,7 @@ import org.me.todoservice.schema.Folder;
 import org.me.todoservice.schema.vo.SubFilesVo;
 import org.me.todoservice.service.ConfigService;
 import org.me.todoservice.service.FolderSevice;
+import org.me.todoservice.utils.AbstractApi;
 import org.me.todoservice.utils.ApiResponse;
 import org.me.todoservice.utils.MyException;
 import org.me.todoservice.utils.mybatis.Page;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/folder")
-public class FolderApi {
+public class FolderApi extends AbstractApi {
 
 	@Autowired
 	private FolderMapper folderMapper;
@@ -41,6 +42,7 @@ public class FolderApi {
 	public ApiResponse<List> get(@RequestParam(required = false) String parentid) {
 		Folder folder = new Folder();
 		folder.setParentId(parentid);
+		folder.setUsercode(getUserCode());
 		Page page = new Page<>(1, Integer.MAX_VALUE);
 		List<Folder> folders = folderMapper.getByPage(page, folder);
 		// 对结果进行转换
@@ -89,6 +91,7 @@ public class FolderApi {
 		// 先查文件夹，如果文件夹超过 pagesize，则只取pagesize条，且不再查articles了。
 		Folder folder = new Folder();
 		folder.setParentId(folderId);
+		folder.setUsercode(getUserCode());
 		List<Folder> folders = folderMapper.getByPage(page, folder);
 		Long folderNum = page.getTotalCount();
 
@@ -97,16 +100,16 @@ public class FolderApi {
 			page.setStart(page.getStart() - folderNum);
 			if (folders.size() != 0)
 				page.setPageSize(pageSize - folders.size());
-			articles = articleMapper.getArticlesByPage(page, folderId);
+			articles = articleMapper.getArticlesByPage(page, folderId, getUserCode());
 		} else {
 			page.setPageSize(1);
 			// 为了获取 total
-			articleMapper.getArticlesByPage(page, folderId);
+			articleMapper.getArticlesByPage(page, folderId, getUserCode());
 		}
 		Long articleNum = page.getTotalCount();
 
 		// 导航列表
-		List<Folder> nav = folderMapper.getNav(folderId);
+		List<Folder> nav = folderMapper.getNav(folderId, getUserCode());
 		Folder home = new Folder();
 		home.setTitle("Home");
 		// 增加Home目录
@@ -123,6 +126,7 @@ public class FolderApi {
 
 	@PostMapping(value = "/add")
 	public ApiResponse<Folder> add(@RequestBody Folder a) {
+		a.setUsercode(getUserCode());
 		folderMapper.add(a);
 		if ("1".equals(a.getLeaf()))
 			folderMapper.updateNotLeaf(a.getParentId());
@@ -138,7 +142,7 @@ public class FolderApi {
 	@GetMapping(value = "/delete")
 	public ApiResponse<Folder> delete(@RequestParam String folderId)  {
 		Page page = new Page<>(1, Integer.MAX_VALUE);
-		List<Article> articles = articleMapper.getAllArticlesByPage(page, folderId);
+		List<Article> articles = articleMapper.getAllArticlesByPage(page, folderId, getUserCode());
 		if (articles != null && articles.size() > 0) {
 			throw new MyException("该目录下有文章，不能删除！");
 		}

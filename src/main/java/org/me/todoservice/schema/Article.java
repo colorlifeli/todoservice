@@ -15,6 +15,7 @@ public class Article {
 	private Date inserttime;
 	private Date operatetime;
 	private Date deletetime;
+	private String usercode;
 
 	public String getId() {
 		return id;
@@ -104,4 +105,11 @@ public class Article {
 		this.folders = folders;
 	}
 
+	public String getUsercode() {
+		return usercode;
+	}
+
+	public void setUsercode(String usercode) {
+		this.usercode = usercode;
+	}
 }

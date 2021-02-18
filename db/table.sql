@@ -8,6 +8,7 @@ content varchar(1000),
 type varchar(2),
 status varchar(2),
 priority int,
+usercode varchar(30),
 inserttime timestamp,
 operatetime timestamp,
 finishtime timestamp,
@@ -32,6 +33,7 @@ path varchar(100),
 tags varchar(100),
 folderId int,
 status varchar(2),
+usercode varchar(30),
 inserttime timestamp,
 operatetime timestamp,
 deletetime timestamp,
@@ -55,6 +57,7 @@ title varchar(100),
 parentId int,
 leaf varchar(2),
 status varchar(2),
+usercode varchar(30),
 inserttime timestamp,
 operatetime timestamp,
 deletetime timestamp,
@@ -100,3 +103,19 @@ comment on column config.operatetime is '更新时间';
 
 insert into config(code,name,value,operatetime)
 values('pagesize','文章每页大小','10', CURRENT_TIMESTAMP(0));
+
+create table user (
+code varchar(30),
+name varchar(30),
+pw varchar(30),
+role varchar(10),
+operatetime timestamp,
+PRIMARY KEY(code)
+);
+comment on table user is '用户表';
+comment on column user.code is '主键,用户代码';
+comment on column user.name is '用户名称';
+comment on column user.pw is '密码';
+comment on column user.role is '角色';
+comment on column user.operatetime is '更新时间';
+

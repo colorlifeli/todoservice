@@ -31,3 +31,6 @@ spring:
 mybatis:
   config-location: classpath:/config/mybatis-config.xml
   mapperLocations: classpath:config/mapper/**/*.xml
+#logging:
+#  level:
+#    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace

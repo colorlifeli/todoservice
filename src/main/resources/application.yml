@@ -17,6 +17,8 @@ spring:
     #data: classpath:sql/data.sql
     username: sa
     password: li123456
+  mvc:
+    static-path-pattern: /static/**
   h2:
     # 开启console 访问 默认false
     console:

@@ -28,7 +28,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
         String path = request.getRequestURI();
-        if ("/user/login".equals(path))
+        if ("/user/login".equals(path) || path.startsWith("/static/"))
             return true;
         String token = request.getHeader("Authorization");
         if (token == null)

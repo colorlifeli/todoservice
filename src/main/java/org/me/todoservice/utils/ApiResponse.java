@@ -78,4 +78,8 @@ public class ApiResponse<T> implements Serializable {
 	public static <T> ApiResponse<T> fail() {
 		return new ApiResponse<T>(FAIL, FAIL_TEXT, null);
 	}
+
+	public static <T> ApiResponse<T> fail(String msg) {
+		return new ApiResponse<T>(FAIL, msg, null);
+	}
 }

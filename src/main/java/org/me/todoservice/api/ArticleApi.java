@@ -1,9 +1,15 @@
 package org.me.todoservice.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import org.me.todoservice.dao.ArticleMapper;
 import org.me.todoservice.dao.CommonMapper;
 import org.me.todoservice.dao.FolderMapper;
@@ -19,6 +25,7 @@ import org.me.todoservice.utils.mybatis.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/article")
@@ -43,6 +51,7 @@ public class ArticleApi extends AbstractApi {
 	@Autowired
 	private FolderMapper folderMapper;
 
+	private final static String IMG_PATH = "static/upload/";
 
 	private final static String cacheKey = "article:temp";
 
@@ -150,7 +159,7 @@ public class ArticleApi extends AbstractApi {
 		if (pageNum == null) {
 			pageNum = 1;
 		}
-		if (pageSize == null) 
+		if (pageSize == null)
 			pageSize = configService.getConfig().getPageSize();
 		Page<Article> page = new Page<>(pageNum, pageSize);
 		List<Article> articles = articleMapper.getByPage(page, getUserCode());
@@ -203,5 +212,40 @@ public class ArticleApi extends AbstractApi {
 			throw new MyException("所在目录已删除，不能恢复");
 		articleMapper.recover(id);
 		return ApiResponse.ok();
+	}
+
+	@PostMapping(value = "/uploadImg")
+	public ApiResponse<String> uploadImg(MultipartFile file, @RequestParam String articleId) {
+		SimpleDateFormat sdf = new SimpleDateFormat("_yyMMdd_HHmmss_");
+		String time = sdf.format(new Date());
+
+		String realPath = this.getClass().getClassLoader().getResource("").getPath();
+		realPath += IMG_PATH;
+		File folder = new File(realPath);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+		String oldName = file.getOriginalFilename();
+		String newName = articleId + time + oldName;
+		try {
+			file.transferTo(new File(folder,newName));
+		} catch (IOException e) {
+			return ApiResponse.fail("保存图片失败");
+		}
+		return new ApiResponse<>(IMG_PATH + newName);
+	}
+
+	@DeleteMapping(value = "/deleteImg")
+	public ApiResponse<String> deleteImg(@RequestParam String fileName) {
+
+		String realPath = this.getClass().getClassLoader().getResource("").getPath();
+		log.info(realPath + fileName);
+		File file = new File(realPath + fileName);
+		if (file.exists()) {
+			file.delete();
+			return ApiResponse.ok();
+		}
+
+		return ApiResponse.fail("删除图片失败");
 	}
 }

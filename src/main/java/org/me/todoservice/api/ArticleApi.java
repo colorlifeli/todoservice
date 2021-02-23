@@ -1,6 +1,7 @@
 package org.me.todoservice.api;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ import org.me.todoservice.utils.mybatis.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -215,11 +219,12 @@ public class ArticleApi extends AbstractApi {
 	}
 
 	@PostMapping(value = "/uploadImg")
-	public ApiResponse<String> uploadImg(MultipartFile file, @RequestParam String articleId) {
+	public ApiResponse<String> uploadImg(MultipartFile file, @RequestParam String articleId) throws FileNotFoundException {
 		SimpleDateFormat sdf = new SimpleDateFormat("_yyMMdd_HHmmss_");
 		String time = sdf.format(new Date());
+		ApplicationHome ah = new ApplicationHome(Article.class);
+		String realPath = ah.getSource().getParentFile().toString() + "/";
 
-		String realPath = this.getClass().getClassLoader().getResource("").getPath();
 		realPath += IMG_PATH;
 		File folder = new File(realPath);
 		if (!folder.exists()) {
@@ -230,6 +235,8 @@ public class ArticleApi extends AbstractApi {
 		try {
 			file.transferTo(new File(folder,newName));
 		} catch (IOException e) {
+			log.info(realPath);
+			log.error("保存图片失败", e);
 			return ApiResponse.fail("保存图片失败");
 		}
 		return new ApiResponse<>(IMG_PATH + newName);
@@ -238,12 +245,13 @@ public class ArticleApi extends AbstractApi {
 	@DeleteMapping(value = "/deleteImg")
 	public ApiResponse<String> deleteImg(@RequestParam String fileName) {
 
-		String realPath = this.getClass().getClassLoader().getResource("").getPath();
+		ApplicationHome ah = new ApplicationHome(Article.class);
+		String realPath = ah.getSource().getParentFile().toString() + "/";
 		log.info(realPath + fileName);
 		File file = new File(realPath + fileName);
 		if (file.exists()) {
-			file.delete();
-			return ApiResponse.ok();
+			if(file.delete())
+				return ApiResponse.ok();
 		}
 
 		return ApiResponse.fail("删除图片失败");

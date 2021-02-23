@@ -19,6 +19,8 @@ spring:
     password: li123456
   mvc:
     static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:static/,file:target/static/
   h2:
     # 开启console 访问 默认false
     console:

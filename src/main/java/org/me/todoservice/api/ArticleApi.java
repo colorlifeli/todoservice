@@ -246,7 +246,7 @@ public class ArticleApi extends AbstractApi {
 	public ApiResponse<String> deleteImg(@RequestParam String fileName) {
 
 		ApplicationHome ah = new ApplicationHome(Article.class);
-		String realPath = ah.getSource().getParentFile().toString() + "/";
+		String realPath = ah.getSource().getParentFile().toString() + "/" + IMG_PATH;
 		log.info(realPath + fileName);
 		File file = new File(realPath + fileName);
 		if (file.exists()) {

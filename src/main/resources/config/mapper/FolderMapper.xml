@@ -65,5 +65,10 @@
 	<select id="get" resultType="org.me.todoservice.schema.Folder">
 		select * from folder where id=#{id}
 	</select>
+
+	<select id="getAllFolder" resultType="org.me.todoservice.schema.Folder">
+		select * from folder
+		
+	</select>
 	
 </mapper>

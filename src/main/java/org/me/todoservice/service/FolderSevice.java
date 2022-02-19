@@ -6,7 +6,9 @@ import org.me.todoservice.utils.mybatis.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FolderSevice {
@@ -30,5 +32,15 @@ public class FolderSevice {
         for (Folder f : folders) {
             this.delete(f.getId());
         }
+    }
+
+    public Map<String, String> getAllFolderNameMap() {
+        Map<String, String> result = new HashMap<>();
+        List<Folder> folders = folderMapper.getAllFolder();
+        for (Folder f : folders) {
+            result.put(f.getId(), f.getTitle());
+        }
+
+        return result;
     }
 }

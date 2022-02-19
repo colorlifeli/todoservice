@@ -49,7 +49,7 @@ comment on column article.folderId is '所在文件夹id';
 comment on column article.inserttime is '创建时间';
 comment on column article.operatetime is '更新时间';
 comment on column article.deletetime is '删除时间';
-comment on column article.status is '状态，未使用';
+comment on column article.status is '状态，0-正常 2-删除';
 
 create table folder (
 id int,

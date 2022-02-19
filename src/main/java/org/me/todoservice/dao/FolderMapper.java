@@ -35,4 +35,6 @@ public interface FolderMapper {
 	int updateNotLeaf(@Param("id") String id);
 
 	Folder get(@Param("id") String id);
+
+	List<Folder> getAllFolder();
 }

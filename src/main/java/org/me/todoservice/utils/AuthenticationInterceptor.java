@@ -9,6 +9,7 @@ import org.me.todoservice.schema.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,6 +21,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
     @Autowired
     UserMapper userMapper;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -28,6 +31,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
         String path = request.getRequestURI();
+        path = path.replace(contextPath, "");
         if ("/user/login".equals(path) || path.startsWith("/static/") || path.startsWith("/error"))
             return true;
         String token = request.getHeader("Authorization");
